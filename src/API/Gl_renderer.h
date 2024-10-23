@@ -1,18 +1,11 @@
 #pragma once
 #include "../Enviroment/CV_Enviroment.h"
 
-namespace OpenGLRenderer
-{
+namespace OpenGLRenderer {
 
-    void InitMinimum();
+void InitMinimum();
 
-    void HotloadShaders();
+void HotloadShaders();
 
-    void geometryPass();
-
-    /* para lo .obj
-
-
-    */
-
-}
+void geometryPass();
+}  // namespace OpenGLRenderer
