@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 
+
 // Vertex data for a cube
 float vertices[] = {
 

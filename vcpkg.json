@@ -2,7 +2,8 @@
   "dependencies": [
     "glad",
     "glfw3",
+    "gli",
     "glm",
-    "gli"
+    "nlohmann-json"
   ]
 }

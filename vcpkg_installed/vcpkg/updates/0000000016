@@ -1,0 +1,9 @@
+Package: gli
+Version: 2021-07-06
+Port-Version: 2
+Depends: glm, vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 6fe347ba502b14653a4d1ac34dd9ce5b23374ce622cea6a6bb69a4daf0454df8
+Description: OpenGL Image (GLI)
+Status: install ok half-installed
