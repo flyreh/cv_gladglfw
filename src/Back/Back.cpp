@@ -3,6 +3,7 @@
 
 #include <string>
 #include "../API/GL_renderer.h"
+#include "../Input/Input.h"
 
 namespace Back {
 
@@ -26,8 +27,8 @@ void window_focus_callback(GLFWwindow* window, int focused);
 
 void Init() {
 
-  float width = 1920 * 0.7f;
-  float height = 1080 * 0.7f;
+  float width = 1920 * 0.5f;
+  float height = 1080 * 0.5f;
 
   glfwInit();
   glfwSetErrorCallback([](int error, const char* description) {
@@ -66,13 +67,13 @@ void Init() {
 
   glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
   glfwSetWindowFocusCallback(_window, window_focus_callback);
-  //glfwSetCursorPosCallback(_window, mouse_callback);
 
   /*
             AssetManager::FindAssetPaths();
         */
 
   glfwMakeContextCurrent(_window);
+
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     std::cout << "Failed to initialize GLAD\n";
     return;
@@ -85,6 +86,7 @@ void Init() {
   std::cout << "\nGPU: " << renderer << "\n";
   std::cout << "GL version: " << major << "." << minor << "\n\n";
 
+  //Carga y Compila los Shaders para los objetos
   OpenGLRenderer::InitMinimum();
 
   // Gizmo::Init();
@@ -94,6 +96,9 @@ void Init() {
   /*
         AssetManager::LoadFont();
         */
+
+  Input::Init();
+  Camera::Init();
 
   glfwShowWindow(Back::GetWindowPointer());
 }
@@ -106,7 +111,9 @@ void EndFrame() {
   glfwSwapBuffers(_window);
 }
 
-void UpdateSubSystems() {}
+void UpdateSubSystems() {
+  Input::Update();
+}
 
 void CleanUp() {
   if (GetWindowMode() == WindowedMode::FULLSCREEN) {
@@ -128,12 +135,12 @@ void CreateGLFWWindow(const WindowedMode& windowedMode) {
   if (windowedMode == WindowedMode::WINDOWED) {
     _currentWindowWidth = _windowedWidth;
     _currentWindowHeight = _windowedHeight;
-    _window = glfwCreateWindow(_windowedWidth, _windowedHeight, "Unloved", NULL, NULL);
-    glfwSetWindowPos(_window, 100, 100);
+    _window = glfwCreateWindow(_windowedWidth, _windowedHeight, "CV", NULL, NULL);
+    glfwSetWindowPos(_window, 400, 150);
   } else if (windowedMode == WindowedMode::FULLSCREEN) {
     _currentWindowWidth = _fullscreenWidth;
     _currentWindowHeight = _fullscreenHeight;
-    _window = glfwCreateWindow(_fullscreenWidth, _fullscreenHeight, "Unloved", _monitor, NULL);
+    _window = glfwCreateWindow(_fullscreenWidth, _fullscreenHeight, "CV", _monitor, NULL);
   }
   _windowedMode = windowedMode;
 }
@@ -144,7 +151,7 @@ void SetWindowedMode(const WindowedMode& windowedMode) {
     _currentWindowHeight = _windowedHeight;
     glfwSetWindowMonitor(_window, nullptr, 0, 0, _windowedWidth, _windowedHeight,
                          _mode->refreshRate);
-    glfwSetWindowPos(_window, 0, 0);
+    glfwSetWindowPos(_window, 400, 150);
   } else if (windowedMode == WindowedMode::FULLSCREEN) {
     _currentWindowWidth = _fullscreenWidth;
     _currentWindowHeight = _fullscreenHeight;
@@ -235,42 +242,4 @@ void window_focus_callback(GLFWwindow*, int focused) {
   }
 }
 
-/*
-    void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
-
-        if (firstMouse) {
-            lastX = xpos;
-            lastY = ypos;
-            firstMouse = false;
-        }
-
-        float xoffset = xpos - lastX;
-        float yoffset = lastY - ypos; // Invertir el eje Y
-        lastX = xpos;
-        lastY = ypos;
-
-        // Ajustar los �ngulos de yaw y pitch
-        const float sensitivity = 0.1f;
-        xoffset *= sensitivity;
-        yoffset *= sensitivity;
-
-        // Actualiza la direcci�n de la c�mara
-        yaw += xoffset;
-        pitch += yoffset;
-
-        // Limitar el pitch para evitar que la c�mara se voltee
-        if (pitch > 89.0f)
-            pitch = 89.0f;
-        if (pitch < -89.0f)
-            pitch = -89.0f;
-
-        // Calcular la nueva direcci�n de la c�mara
-        glm::vec3 front;
-        front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-        front.y = sin(glm::radians(pitch));
-        front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-        cameraFront = glm::normalize(front);
-
-        std::cout << "Camera Front: " << cameraFront.x << ", " << cameraFront.y << ", " << cameraFront.z << std::endl;
-    }*/
 }  // namespace Back

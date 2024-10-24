@@ -41,9 +41,9 @@ void Shader::Use() {
 }
 
 void Shader::Load(std::string vertexPath, std::string fragmentPath) {
-
-  std::string vertexSource = readTextFromFile("res/shaders/" + vertexPath);
-  std::string fragmentSource = readTextFromFile("res/shaders/" + fragmentPath);
+ 
+  std::string vertexSource = readTextFromFile(std::string(SHADERS_DIR) + "shaders/" + vertexPath);
+  std::string fragmentSource = readTextFromFile(std::string(SHADERS_DIR) + "shaders/" + fragmentPath);
 
   const char* vShaderCode = vertexSource.c_str();
   const char* fShaderCode = fragmentSource.c_str();
@@ -114,9 +114,9 @@ void Shader::SetFloat(const std::string& name, float value) {
 
 void Shader::Load(std::string vertexPath, std::string fragmentPath, std::string geomPath) {
 
-  std::string vertexSource = readTextFromFile("res/shaders/OpenGL/" + vertexPath);
-  std::string fragmentSource = readTextFromFile("res/shaders/OpenGL/" + fragmentPath);
-  std::string geometrySource = readTextFromFile("res/shaders/OpenGL/" + geomPath);
+  std::string vertexSource = readTextFromFile("resources/shaders/OpenGL/" + vertexPath);
+  std::string fragmentSource = readTextFromFile("resources/shaders/OpenGL/" + fragmentPath);
+  std::string geometrySource = readTextFromFile("resources/shaders/OpenGL/" + geomPath);
 
   const char* vShaderCode = vertexSource.c_str();
   const char* fShaderCode = fragmentSource.c_str();

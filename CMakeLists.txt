@@ -19,6 +19,9 @@ find_package(nlohmann_json REQUIRED )
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/**/*.cpp")
 
+# Ruta relativa a resources
+set(SHADERS_DIR "${CMAKE_SOURCE_DIR}/src/resources/")
+
 # Agregue un origen al ejecutable de este proyecto.
 add_executable(cv_gladglfw ${SOURCES})
 
@@ -28,3 +31,5 @@ endif()
 
 target_include_directories(cv_gladglfw PRIVATE "${CMAKE_SOURCE_DIR}\\out\\build\\x64-debug\\vcpkg_installed\\x64-windows\\include")
 target_link_libraries(cv_gladglfw PRIVATE OpenGL::GL glfw glad::glad glm::glm gli nlohmann_json::nlohmann_json)
+
+target_compile_definitions(cv_gladglfw PRIVATE SHADERS_DIR="${SHADERS_DIR}")
