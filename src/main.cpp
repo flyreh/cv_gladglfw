@@ -132,11 +132,8 @@ int main() {
     Back::CleanUp();
 
     // Limpiar recursos por cada VAO y VBO creado (bucle)
-    unsigned int cubeVAO = GLBackVertex::GetCubeVAO();
-    glDeleteVertexArrays(1, &cubeVAO);
-
-	unsigned int cubeVBO = GLBackVertex::GetCubeVBO();
-    glDeleteBuffers(1, &cubeVBO);
+    OpenGLRenderer::DeleteCubeVAO();
+    OpenGLRenderer::DeleteCubeVBO();
 
     return 0;
 }

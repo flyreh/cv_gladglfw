@@ -42,6 +42,10 @@ namespace OpenGLRenderer {
 
     void CubePass(std::vector<float> Cubevertices);
 
+    void DeleteCubeVAO();
+
+    void DeleteCubeVBO();
+
     /* para lo .obj
     
 

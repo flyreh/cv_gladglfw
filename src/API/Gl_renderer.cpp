@@ -50,3 +50,16 @@ void OpenGLRenderer::CubePass(std::vector<float> Cubevertices /*por ahora se pas
   //activa VAO del Cubo
   glBindVertexArray(GLBackVertex::GetCubeVAO());
 }
+
+void OpenGLRenderer::DeleteCubeVAO() {
+  unsigned int cubeVAO = GLBackVertex::GetCubeVAO();
+  glDeleteVertexArrays(1, &cubeVAO);
+
+  std::cout << "Cube VAO delete" << std::endl;
+}
+
+void OpenGLRenderer::DeleteCubeVBO() {
+  unsigned int cubeVBO = GLBackVertex::GetCubeVBO();
+  glDeleteBuffers(1, &cubeVBO);
+  std::cout << "Cube VBO delete"<<std::endl;
+}
