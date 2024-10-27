@@ -10,67 +10,29 @@
 #include "./API/Gl_renderer.h"
 #include "./API/GL_BackVertex.h"
 
-// Vertex data for a cube
-std::vector vertices = {
-
-    // Positions (3)   // Texture Coords (2)
-    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-
-    -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-
-    -0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f, 0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f, 1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
-
-     0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f, 0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-     0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f, 1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
-
-    -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
-     0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-
-    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f
-};
 
 // Frame
 bool firstFrame = true;
-float currentFrame = 0.0f;
-float deltaTime = 0.0f; 
-float lastFrame = 0.0f; 
+double currentFrame = 0.0f;
+double deltaTime = 0.0f; 
+double lastFrame = 0.0f; 
 
 int main() {
 
 	//inicio de las configuraciones de la ventana, de glfw y glad. Además carga y compila todos los shaders que definamos (por ahora solo hay del cubo).
     Back::Init();
 
-	// Creación y Activación de VAO y VBO para cada objeto a Renderizar
-	// En este caso solo del cubo . Además, activa el shader de cubo
-	OpenGLRenderer::CubePass(vertices);
+	// Creación de VAO y VBO para cada objeto a Renderizar
+    OpenGLRenderer::ObjectsPass();
+
+    // Activación del shader del cubo
+    OpenGLRenderer::ActivateCubeShader();
+
+    // Activación del VAO del cubo
+    OpenGLRenderer::ActivateCubeVAO();
+
+    // Activación de la textura del cubo
+    OpenGLRenderer::ActivateCubeTexture("Cube");
 
     while (Back::WindowIsOpen()){
 
@@ -80,11 +42,9 @@ int main() {
         Back::UpdateSubSystems();
 
         if(firstFrame){
-            float currentFrame = glfwGetTime();
-            firstFrame = false;
-                
+            currentFrame = glfwGetTime();
+            firstFrame = false;       
         }
-
         lastFrame = currentFrame;
         currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
@@ -92,20 +52,23 @@ int main() {
 		//Actualización de la "cámara"
         Camera::Update(deltaTime);
 
-        glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
+        glClearColor(0.12f, 0.12f, 0.12f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST); // Habilitar el test de profundidad
 
         // Matrices de transformación
         // Son alternativas de la librería glm a las funciones de la matriz de transformación de glut.h (como gluLlookAt o glperspective)
-
+        /*
+            * Al renderizar múltiples objetos en la misma escena, se comparte la misma matriz view y projection) para todos,
+            pero cada objeto tendrá su propia matriz model en función de su posición y orientación.
+        */
         glm::mat4 model = glm::mat4(1.0f); // Matriz modelo 
 
         glm::mat4 view = glm::lookAt(Camera::GetCameraPos(), Camera::GetCameraPos() + Camera::GetCameraFront(), Camera::GetCameraUp()); // Matriz vista
 
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), Back::GetWindowedWidth() / Back::GetCurrentWindowHeight(), 0.1f, 100.0f);
 
-        //usamos la función SetMat4 para pasar las matrices al shader /solo shaders del cubo/ y este pueda realizar las transformaciones de los vértices
+        //SetMat4 pasa las matrices al shader /solo shaders del cubo/ y este pueda realizar las transformaciones de los vértices
 		OpenGLRenderer::g_shaders.Cube.SetMat4("model", model);
 		OpenGLRenderer::g_shaders.Cube.SetMat4("view", view);
 		OpenGLRenderer::g_shaders.Cube.SetMat4("projection", projection);
@@ -119,7 +82,7 @@ int main() {
 
 		// Esto Dibuja un segundo cubo, con escala, rotación y traslación
         glm::mat4 modelOtherCube = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 5.0f, -10.0f));
-		modelOtherCube = glm::scale(modelOtherCube, glm::vec3(3.0f, 3.0f, 3.0f)); 
+		modelOtherCube = glm::scale(modelOtherCube, glm::vec3(2.0f, 2.0f, 2.0f)); 
 		modelOtherCube = glm::rotate(modelOtherCube, (float)currentFrame, glm::vec3(1.0f, 0.0f, 0.0f));
 
         OpenGLRenderer::g_shaders.Cube.SetMat4("model", modelOtherCube);

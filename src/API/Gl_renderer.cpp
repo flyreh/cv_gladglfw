@@ -3,6 +3,7 @@
 #include "../Back/Back.h"
 #include "Types/GL_shader.h"
 #include "GL_BackVertex.h"
+#include "../Core/AssetManager.h"
 
 struct LightVolumeData {
   glm::vec4 aabbMin;
@@ -37,18 +38,33 @@ void OpenGLRenderer::InitMinimum() {
   // carga de buffers VAO y VBO para objetos 3D
 }
 
-void OpenGLRenderer::CubePass(std::vector<float> Cubevertices /*por ahora se pasan los vertices del main*/) {
+void OpenGLRenderer::ObjectsPass() {
   // Carga vertices del .obj
   // std::vector<glm::vec2> CubeVertices = Util.GenerateVerticesCube();
 
   // Creación de VAO y VBO para el cubo
-  GLBackVertex::UploadCubeVertexData(Cubevertices);
+  AssetManager::UploadVertexData();
 
-  //activa shader de cubo
+  //Creación de VAO y VBO para otro objeto
+
+}
+
+void OpenGLRenderer::ActivateCubeShader() {
   g_shaders.Cube.Use();
+}
 
-  //activa VAO del Cubo
+void OpenGLRenderer::ActivateCubeVAO() {
   glBindVertexArray(GLBackVertex::GetCubeVAO());
+}
+
+void OpenGLRenderer::ActivateCubeTexture(std::string textureName) {
+
+
+  TextureObject* cubeTexture = AssetManager::GetTextureByName(textureName);
+
+  if (cubeTexture) {
+    glBindTexture(GL_TEXTURE_2D, cubeTexture->GetGLTexture().GetID());
+  }
 }
 
 void OpenGLRenderer::DeleteCubeVAO() {

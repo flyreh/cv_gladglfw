@@ -217,7 +217,7 @@ struct TextureData {
   int m_width = 0;
   int m_height = 0;
   int m_numChannels = 0;
-  void* m_data = nullptr;
+  unsigned char* m_data;
 };
 
 struct CompressedTextureData {

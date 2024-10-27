@@ -96,6 +96,37 @@ namespace GLBackVertex {
 
 void GLBackVertex::UploadCubeVertexData(std::vector<float> vertices) {
 
+  static int allocatedBufferSize = 0;
+  if (g_cubeVAO == 0) {
+    glGenVertexArrays(1, &g_cubeVAO);
+    glGenBuffers(1, &g_cubeVBO);
+  }
+  if (vertices.empty()) {
+    return;
+  }
+  glBindVertexArray(g_cubeVAO);
+  glBindBuffer(GL_ARRAY_BUFFER, g_cubeVBO);
+
+  if (vertices.size() * sizeof(float) <= allocatedBufferSize) {
+    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(float), vertices.data());
+  } else {
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+    allocatedBufferSize = vertices.size() * sizeof(float);
+  }
+
+  // Configura los atributos de los vértices
+  // Posición de los vértices
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
+
+  // Coordenadas de textura
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
+
+  glBindVertexArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
     /*static int allocatedBufferSize = 0;
     if (g_cubeVAO == 0) {
         glGenVertexArrays(1, & g_cubeVAO);
@@ -122,36 +153,6 @@ void GLBackVertex::UploadCubeVertexData(std::vector<float> vertices) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     allocatedBufferSize = vertices.size() * sizeof(glm::vec2);*/
 
-    static int allocatedBufferSize = 0;
-    if (g_cubeVAO == 0) {
-        glGenVertexArrays(1, &g_cubeVAO);
-        glGenBuffers(1, &g_cubeVBO);
-    }
-    if (vertices.empty()) {
-        return;
-    }
-    glBindVertexArray(g_cubeVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, g_cubeVBO);
-
-    if (vertices.size() * sizeof(float) <= allocatedBufferSize) {
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(float), vertices.data());
-    }
-    else {
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-        allocatedBufferSize = vertices.size() * sizeof(float);
-    }
-
-    // Configura los atributos de los vértices
-    // Posición de los vértices
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // Coordenadas de textura
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 

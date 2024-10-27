@@ -40,11 +40,19 @@ namespace OpenGLRenderer {
   
     void HotloadShaders();
 
-    void CubePass(std::vector<float> Cubevertices);
+    void ObjectsPass();
+
+    void ActivateCubeShader();
+
+    void ActivateCubeVAO();
+
+    void ActivateCubeTexture(std::string textureName);
 
     void DeleteCubeVAO();
 
     void DeleteCubeVBO();
+
+
 
     /* para lo .obj
     

@@ -4,6 +4,7 @@
 #include <string>
 #include "../API/GL_renderer.h"
 #include "../Input/Input.h"
+#include "../Core/AssetManager.h"
 
 namespace Back {
 
@@ -27,8 +28,8 @@ void window_focus_callback(GLFWwindow* window, int focused);
 
 void Init() {
 
-  float width = 1920 * 0.5f;
-  float height = 1080 * 0.5f;
+  float width = 1920 * 0.6f;
+  float height = 1080 * 0.6f;
 
   glfwInit();
   glfwSetErrorCallback([](int error, const char* description) {
@@ -68,10 +69,6 @@ void Init() {
   glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
   glfwSetWindowFocusCallback(_window, window_focus_callback);
 
-  /*
-            AssetManager::FindAssetPaths();
-        */
-
   glfwMakeContextCurrent(_window);
 
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -86,6 +83,10 @@ void Init() {
   std::cout << "\nGPU: " << renderer << "\n";
   std::cout << "GL version: " << major << "." << minor << "\n\n";
 
+
+  // Carga de los assets: Texturas y Modelos. 
+  AssetManager::LoadAssetPath();
+
   //Carga y Compila los Shaders para los objetos
   OpenGLRenderer::InitMinimum();
 
@@ -99,8 +100,9 @@ void Init() {
 
   Input::Init();
   Camera::Init();
-
+ 
   glfwShowWindow(Back::GetWindowPointer());
+
 }
 
 void BeginFrame() {
