@@ -28,7 +28,7 @@ namespace AssetManager {
    // std::vector<TextureCubeMap>& GetCubemapTextures();
     TextureCubeMap* GetCubemapTextureByName(const std::string& name);
 
-    void CreateIndicesCubeMapData();
+
 
 	
 	// Vertices Cube
@@ -36,8 +36,6 @@ namespace AssetManager {
     void CreateVertexData();
 
     void UploadVertexDataCubeMap();
-    void CreateVertexDataCubeMap();
-
 	// Para modelos
 
 

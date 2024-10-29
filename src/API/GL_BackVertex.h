@@ -8,7 +8,7 @@ namespace GLBackVertex {
 	//Para Cubo, por ahora
 	void UploadCubeVertexData(std::vector<float>);
 
-	void UploadCubeMapVertexData(std::vector<float>&, std::vector<unsigned int>&);
+	void UploadCubeMapVertexData(const float (&skyboxVertices)[24],const unsigned int (&skyboxIndices)[36] );
 
 	GLuint GetCubeVAO();
 

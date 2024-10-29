@@ -89,7 +89,6 @@ void OpenGLRenderer::DeleteCubeVBO() {
 
 void OpenGLRenderer::ActivateCubeMapShader() {
   g_shaders.cubeMap.Use();
-  std::cout << "CubeMap Shader ID :::: " <<g_shaders.cubeMap.GetId() << std::endl;
   g_shaders.cubeMap.SetInt("skybox", 0);
 }
 
@@ -103,8 +102,6 @@ void OpenGLRenderer::ActivateTextureCubeMap(std::string textureName) {
   if (cubeMapTexture) {
     
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture->GetGLtextureCubeMap().GetID());
-    std::cout << "Texture CubeMap ID: " << cubeMapTexture->GetGLtextureCubeMap().GetID()
-              << " Nombre : "<< cubeMapTexture->GetName()<<std::endl;
 
   }
 }

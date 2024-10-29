@@ -38,7 +38,6 @@ int checkCompileErrors(unsigned int shader, std::string type) {
 }
 
 void Shader::Use() {
-  std::cout << "USE SHADER: " << m_ID << std::endl;
   glUseProgram(m_ID);
 }
 

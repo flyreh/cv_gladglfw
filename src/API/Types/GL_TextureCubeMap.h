@@ -9,7 +9,6 @@ struct OpenGLCubemapTexture {
  public:
   OpenGLCubemapTexture() = default;
   void Load(std::string filepath, std::string filetype);
-  void Bake();
  // void Activate();
   unsigned int GetID();
   unsigned int GetWidth();

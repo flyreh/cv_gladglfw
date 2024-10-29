@@ -125,12 +125,6 @@ void AssetManager::LoadAssetPath() {
         LoadCubemapTexture(&texture);
       }
 
-    
-
-      /*for (TextureCubeMap& texture : g_cubemapTextures) {
-
-        texture.GetGLtextureCubeMap().Bake();
-      }*/
 
       ////Bake Texturas
       for (TextureObject& texture : g_textures) {
@@ -144,82 +138,53 @@ void AssetManager::LoadAssetPath() {
 
 void AssetManager::CreateVertexData() {
     g_vertices = {
-    // Positions (3)   // Texture Coords (2)
-    // Trasera (z = -0.5)
-    -0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-     0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-     0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+    // positions          // normals
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-    // frontal (z = 0.5)
-    -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
 
-    // Izquierda (x = -0.5)
-    -0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-    // Derecha (x = 0.5)
-    0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
-    0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
-    0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-    0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-    0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-    0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-    // Inferior (y = -0.5)
-    -0.5f, -0.5f,  0.5f, 0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f, 1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-     0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-    // Superior (y = 0.5)
-    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 
 };
 
 }
 
-void AssetManager::CreateIndicesCubeMapData() {
-
-    g_indicesCubeMap = {
-	// Right
-	1, 2, 6,
-	6, 5, 1,
-	// Left
-	0, 4, 7,
-	7, 3, 0,
-	// Top
-	4, 5, 6,
-	6, 7, 4,
-	// Bottom
-	0, 3, 2,
-	2, 1, 0,
-	// Back
-	0, 1, 5,
-	5, 4, 0,
-	// Front
-	3, 7, 6,
-	6, 2, 3
-};
-}
 
 void AssetManager::UploadVertexData() {
     //Carga de vertices del objeto.
@@ -285,27 +250,37 @@ std::vector<TextureObject>& AssetManager::GetTextures() {
   return g_textures;
 }
 
-void AssetManager::CreateVertexDataCubeMap() {
-
-  g_verticesCubeMap = {
-   //   Coordinates
-	-1.0f, -1.0f,  1.0f,//        7--------6
-	 1.0f, -1.0f,  1.0f,//       /|       /|
-	 1.0f, -1.0f, -1.0f,//      4--------5 |
-	-1.0f, -1.0f, -1.0f,//      | |      | |
-	-1.0f,  1.0f,  1.0f,//      | 3------|-2
-	 1.0f,  1.0f,  1.0f,//      |/       |/
-	 1.0f,  1.0f, -1.0f,//      0--------1
-	-1.0f,  1.0f, -1.0f
-  };
-
-}
 
 void AssetManager::UploadVertexDataCubeMap() {
-  CreateVertexDataCubeMap();
-  CreateIndicesCubeMapData();
+    float skyboxVertices[] = {
+    //   Coordinates
+    -1.0f, -1.0f, 1.0f,   //        7--------6
+    1.0f,  -1.0f, 1.0f,   //       /|       /|
+    1.0f,  -1.0f, -1.0f,  //      4--------5 |
+    -1.0f, -1.0f, -1.0f,  //      | |      | |
+    -1.0f, 1.0f,  1.0f,   //      | 3------|-2
+    1.0f,  1.0f,  1.0f,   //      |/       |/
+    1.0f,  1.0f,  -1.0f,  //      0--------1
+    -1.0f, 1.0f,  -1.0f
+};
+
+unsigned int skyboxIndices[] = {
+    // Right
+    1, 2, 6, 6, 5, 1,
+    // Left
+    0, 4, 7, 7, 3, 0,
+    // Top
+    4, 5, 6, 6, 7, 4,
+    // Bottom
+    0, 3, 2, 2, 1, 0,
+    // Back
+    0, 1, 5, 5, 4, 0,
+    // Front
+    3, 7, 6, 6, 2, 3
+};
+
   
-  GLBackVertex::UploadCubeMapVertexData(g_verticesCubeMap, g_indicesCubeMap);
+  GLBackVertex::UploadCubeMapVertexData(skyboxVertices, skyboxIndices);
 
 }
 
