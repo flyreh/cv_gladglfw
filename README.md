@@ -6,17 +6,22 @@ h : Load/Reload shaders<br>
 esc : exit<br>
 F1 : open Menu ?<br>
 
-<div style="text-align: center;">
-  <img src="src/resources/tests/test1.png" alt="Position" width="400" height="250">
-</div>
+<style>
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    justify-items: center;
+  }
+  .image-grid img {
+    width: 450px;
+    height: 190px;
+  }
+</style>
 
-<div style="text-align: center;">
-  <img src="src/resources/tests/test2.png" alt="Position" width="400" height="250">
-</div>
-<div style="text-align: center;">
-  <img src="src/resources/tests/test3.png" alt="Position" width="400" height="250">
-</div>
-
-<div style="text-align: center;">
-  <img src="src/resources/tests/test4.png" alt="Position" width="400" height="250">
+<div class="image-grid">
+  <img src="src/resources/tests/test1.png" alt="Position">
+  <img src="src/resources/tests/test2.png" alt="Position">
+  <img src="src/resources/tests/test3.png" alt="Position">
+  <img src="src/resources/tests/test4.png" alt="Position">
 </div>
