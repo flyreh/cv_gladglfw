@@ -30,6 +30,10 @@ namespace GLBackVertex {
     GLuint g_cubeVAO = 0;
     GLuint g_cubeVBO = 0;
 
+    GLuint g_cubeMapVAO = 0;
+    GLuint g_cubeMapVBO = 0;
+    GLuint g_cubeMapEBO = 0;
+
 
     GLuint GetVertexDataVAO() {
         return _vertexDataVAO;
@@ -90,6 +94,18 @@ namespace GLBackVertex {
 	GLuint GetCubeVBO() {
 		return g_cubeVBO;
 	}
+
+    GLuint GetCubeMapVAO() {
+      return g_cubeMapVAO;
+    }
+
+    GLuint GetCubeMapVBO() {
+      return g_cubeMapVBO;
+    }
+
+    GLuint GetCubeMapEBO() {
+      return g_cubeMapEBO;
+    }
 
 
 }
@@ -154,5 +170,32 @@ void GLBackVertex::UploadCubeVertexData(std::vector<float> vertices) {
     allocatedBufferSize = vertices.size() * sizeof(glm::vec2);*/
 
 }
+
+void GLBackVertex::UploadCubeMapVertexData(std::vector<float> &vertices, std::vector<unsigned int>& indices) {
+
+  glGenVertexArrays(1, &g_cubeMapVAO);
+  glGenBuffers(1, &g_cubeMapVBO);
+  glGenBuffers(1, &g_cubeMapEBO);
+  glBindVertexArray(g_cubeMapVAO);
+  glBindBuffer(GL_ARRAY_BUFFER, g_cubeMapVBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_cubeMapEBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+  /*glEnableVertexAttribArray(0);
+ 
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  
+  glBindVertexArray(0);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);*/
+}
+
+
 
 

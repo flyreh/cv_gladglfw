@@ -1,7 +1,6 @@
 #include <iostream>
 #include "../../Util.hpp"
 #include "GL_TextureObject.h"
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 
@@ -122,7 +121,7 @@ bool OpenGLTexture::Load(const std::string filepath, bool compressed) {
   this->_NumOfChannels = textureData.m_numChannels;
 
   std::cout << "Load Texture : " << m_filename << " width : " << textureData.m_width
-            << ", height : " << textureData.m_height << std ::endl;
+            << ", height : " << textureData.m_height << "Numero de canales : "<<textureData.m_numChannels<<std::endl;
 
   return true;
 }
@@ -170,7 +169,7 @@ TextureData LoadTextureData(std::string filepath) {
   TextureData textureData;
   std::cout << "filepath data : " << filepath.data() << std::endl;
   textureData.m_data = stbi_load(filepath.data(), &textureData.m_width, &textureData.m_height,
-                                 &textureData.m_numChannels, 0);
+                                 &textureData.m_numChannels, STBI_rgb_alpha);
 
   if (textureData.m_data == nullptr) {
     std::cerr << "Error al cargar la textura: " << filepath << std::endl;
@@ -187,6 +186,13 @@ TextureData LoadDDSTextureData(std::string filepath) {
 
 
 bool OpenGLTexture::Bake() {
+
+    int maxTextureSize;
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
+    if (_width > maxTextureSize || _height > maxTextureSize) {
+        std::cout << "Error: Tamaño de la textura excede el máximo soportado (" << maxTextureSize << ")" << std::endl;
+        return false;
+    }
     
     if (m_data == nullptr) {
       std::cout << "Error: m_data es nullptr en Bake()." << std::endl;
@@ -197,11 +203,11 @@ bool OpenGLTexture::Bake() {
     glBindTexture(GL_TEXTURE_2D, ID);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
     
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, m_data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_data);
 
     glGenerateMipmap(GL_TEXTURE_2D);
 

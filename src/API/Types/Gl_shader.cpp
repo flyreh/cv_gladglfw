@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <glm/gtc/type_ptr.hpp>
 
 std::string readTextFromFile(std::string path) {
   std::ifstream file(path);
@@ -37,6 +38,7 @@ int checkCompileErrors(unsigned int shader, std::string type) {
 }
 
 void Shader::Use() {
+  std::cout << "USE SHADER: " << m_ID << std::endl;
   glUseProgram(m_ID);
 }
 
@@ -47,6 +49,7 @@ void Shader::Load(std::string vertexPath, std::string fragmentPath) {
 
   const char* vShaderCode = vertexSource.c_str();
   const char* fShaderCode = fragmentSource.c_str();
+
 
   unsigned int vertex = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertex, 1, &vShaderCode, NULL);
@@ -63,28 +66,30 @@ void Shader::Load(std::string vertexPath, std::string fragmentPath) {
   glAttachShader(tempID, fragment);
   glLinkProgram(tempID);
 
-  if (checkCompileErrors(tempID, "PROGRAM")) {
-    if (m_ID != -1) {
-      glDeleteProgram(m_ID);
-    }
-    m_ID = tempID;
+ m_ID = tempID;
+    
+  checkCompileErrors(m_ID, "FRAGMENT");
+
     m_uniformsLocations.clear();
-  } else {
-    std::cout << "shader failed to compile " << vertexPath << " " << fragmentPath << "\n";
-  }
+   
   glDeleteShader(vertex);
   glDeleteShader(fragment);
+
+  std::cout << "Shader ID LOADED: " << m_ID << std::endl;
 }
 
-void Shader::SetMat4(const std::string& name, glm::mat4 value) {
-  if (m_uniformsLocations.find(name) == m_uniformsLocations.end())
-    m_uniformsLocations[name] = glGetUniformLocation(m_ID, name.c_str());
-  glUniformMatrix4fv(m_uniformsLocations[name], 1, GL_FALSE, &value[0][0]);
+int Shader::GetId() {
+  return m_ID;
+}
+
+void Shader::SetMat4(const std::string& name, glm::mat4 &value) {
+  glUniformMatrix4fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 void Shader::SetVec3(const std::string& name, const glm::vec3& value) {
   if (m_uniformsLocations.find(name) == m_uniformsLocations.end())
     m_uniformsLocations[name] = glGetUniformLocation(m_ID, name.c_str());
+
   glUniform3fv(m_uniformsLocations[name], 1, &value[0]);
 }
 
@@ -101,9 +106,7 @@ void Shader::SetBool(const std::string& name, bool value) {
 }
 
 void Shader::SetInt(const std::string& name, int value) {
-  if (m_uniformsLocations.find(name) == m_uniformsLocations.end())
-    m_uniformsLocations[name] = glGetUniformLocation(m_ID, name.c_str());
-  glUniform1i(m_uniformsLocations[name], value);
+  glUniform1i(glGetUniformLocation(m_ID, name.c_str()), 0);
 }
 
 void Shader::SetFloat(const std::string& name, float value) {
@@ -111,6 +114,8 @@ void Shader::SetFloat(const std::string& name, float value) {
     m_uniformsLocations[name] = glGetUniformLocation(m_ID, name.c_str());
   glUniform1f(m_uniformsLocations[name], value);
 }
+
+//incluye GeomPath para cargar shaders de geometría
 
 void Shader::Load(std::string vertexPath, std::string fragmentPath, std::string geomPath) {
 

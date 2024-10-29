@@ -11,7 +11,8 @@ TextureObject::TextureObject(std::string fullpath, bool compressed) {
 }
 
 void TextureObject::Load() {
-  
+
+
     glTexture.Load(m_fullPath, m_compressed);
   
   return;

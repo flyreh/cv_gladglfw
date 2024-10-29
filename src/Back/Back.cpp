@@ -28,16 +28,16 @@ void window_focus_callback(GLFWwindow* window, int focused);
 
 void Init() {
 
-  float width = 1920 * 0.6f;
-  float height = 1080 * 0.6f;
+  float width = 1920 * 0.65;
+  float height = 1080 * 0.65;
 
   glfwInit();
   glfwSetErrorCallback([](int error, const char* description) {
     std::cout << "GLFW Error (" << std::to_string(error) << "): " << description << "\n";
   });
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 
@@ -69,7 +69,10 @@ void Init() {
   glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
   glfwSetWindowFocusCallback(_window, window_focus_callback);
 
+
   glfwMakeContextCurrent(_window);
+
+  gladLoadGL();
 
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     std::cout << "Failed to initialize GLAD\n";
@@ -83,16 +86,17 @@ void Init() {
   std::cout << "\nGPU: " << renderer << "\n";
   std::cout << "GL version: " << major << "." << minor << "\n\n";
 
+  //Carga y Compila los Shaders para los objetos
+  OpenGLRenderer::InitMinimum();
 
   // Carga de los assets: Texturas y Modelos. 
   AssetManager::LoadAssetPath();
 
-  //Carga y Compila los Shaders para los objetos
-  OpenGLRenderer::InitMinimum();
+  
 
   // Gizmo::Init();
 
-  glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
+//  glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
 
   /*
         AssetManager::LoadFont();
@@ -102,7 +106,7 @@ void Init() {
   Camera::Init();
  
   glfwShowWindow(Back::GetWindowPointer());
-
+  
 }
 
 void BeginFrame() {

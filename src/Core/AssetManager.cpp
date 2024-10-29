@@ -13,7 +13,7 @@
 #include <vector>
 #include <thread>
 #include <chrono>
-
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 //#include "tiny_obj_loader.h"
 
@@ -32,10 +32,13 @@ namespace AssetManager {
 
     std::vector<float> g_vertices;
 
+    std::vector<float> g_verticesCubeMap;
+
     std::vector<std::future<void>> _futures;
 
     std::vector<WeightedVertex> g_weightedVertices;
-    std::vector<uint32_t> g_indices;
+    std::vector<unsigned int> g_indicesCubeMap;
+
     std::vector<uint32_t> g_weightedIndices;
 
     //std::vector<Mesh> g_meshes;
@@ -43,7 +46,7 @@ namespace AssetManager {
 
     std::vector<TextureObject> g_textures;
     //std::vector<Material> g_materials;
-    //std::vector<CubemapTexture> g_cubemapTextures;
+    std::vector<TextureCubeMap> g_cubemapTextures;
     //std::vector<GPUMaterial> g_gpuMaterials;
 
     std::unordered_map<std::string, int> g_materialIndexMap;
@@ -87,6 +90,21 @@ void AssetManager::LoadAssetPath() {
         }
       }
 
+      auto skyboxTexturePaths = std::filesystem::directory_iterator(std::string(SHADERS_DIR) + "textures/cubemap/");
+      for (const auto& entry : skyboxTexturePaths) {
+        FileInfo info = Util::GetFileInfo(entry);
+        if (info.filetype == "png" || info.filetype == "jpg" || info.filetype == "tga") {
+
+          if (info.filename.substr(info.filename.length() - 5) == "Right") {
+
+            std::cout << info.fullpath << "\n";
+
+            g_cubemapTextures.emplace_back(TextureCubeMap(info.fullpath));
+            
+          }
+        }
+      }
+
       /*auto uiTexturePaths = std::filesystem::directory_iterator("res/textures/ui/");
       for (const auto& entry : uiTexturePaths) {
         FileInfo info = Util::GetFileInfo(entry);
@@ -95,18 +113,29 @@ void AssetManager::LoadAssetPath() {
         }
       }*/
 
-      // Cargar Arreglo de texturas
+       // Cargar Arreglo de texturas
       for (TextureObject& texture : g_textures) {
-         
-          LoadTexture(&texture);
-          //_futures.push_back(std::async(std::launch::async, LoadTexture, &texture));
-        
+
+        LoadTexture(&texture);
+        //_futures.push_back(std::async(std::launch::async, LoadTexture, &texture));
       }
+
+
+      for (TextureCubeMap& texture : g_cubemapTextures) {
+        LoadCubemapTexture(&texture);
+      }
+
+    
+
+      /*for (TextureCubeMap& texture : g_cubemapTextures) {
+
+        texture.GetGLtextureCubeMap().Bake();
+      }*/
 
       ////Bake Texturas
       for (TextureObject& texture : g_textures) {
         
-        texture.Bake();
+        texture.GetGLTexture().Bake();
       }
 
       std::cout<<"Uploading textures and models to GPU"<<std::endl;
@@ -166,6 +195,30 @@ void AssetManager::CreateVertexData() {
 
 };
 
+}
+
+void AssetManager::CreateIndicesCubeMapData() {
+
+    g_indicesCubeMap = {
+	// Right
+	1, 2, 6,
+	6, 5, 1,
+	// Left
+	0, 4, 7,
+	7, 3, 0,
+	// Top
+	4, 5, 6,
+	6, 7, 4,
+	// Bottom
+	0, 3, 2,
+	2, 1, 0,
+	// Back
+	0, 1, 5,
+	5, 4, 0,
+	// Front
+	3, 7, 6,
+	6, 2, 3
+};
 }
 
 void AssetManager::UploadVertexData() {
@@ -230,4 +283,68 @@ void AssetManager::LoadTexture(TextureObject* texture) {
 
 std::vector<TextureObject>& AssetManager::GetTextures() {
   return g_textures;
+}
+
+void AssetManager::CreateVertexDataCubeMap() {
+
+  g_verticesCubeMap = {
+   //   Coordinates
+	-1.0f, -1.0f,  1.0f,//        7--------6
+	 1.0f, -1.0f,  1.0f,//       /|       /|
+	 1.0f, -1.0f, -1.0f,//      4--------5 |
+	-1.0f, -1.0f, -1.0f,//      | |      | |
+	-1.0f,  1.0f,  1.0f,//      | 3------|-2
+	 1.0f,  1.0f,  1.0f,//      |/       |/
+	 1.0f,  1.0f, -1.0f,//      0--------1
+	-1.0f,  1.0f, -1.0f
+  };
+
+}
+
+void AssetManager::UploadVertexDataCubeMap() {
+  CreateVertexDataCubeMap();
+  CreateIndicesCubeMapData();
+  
+  GLBackVertex::UploadCubeMapVertexData(g_verticesCubeMap, g_indicesCubeMap);
+
+}
+
+
+void AssetManager::LoadCubemapTexture(TextureCubeMap* cubemapTexture) {
+  FileInfo fileInfo = Util::GetFileInfo(cubemapTexture->m_fullPath);
+  cubemapTexture->SetName(fileInfo.filename.substr(0, fileInfo.filename.length() - 6));
+  cubemapTexture->SetFileType(fileInfo.filetype);
+  std::cout << "Loading cubemap texture: " << cubemapTexture->GetName() << "\n";
+  cubemapTexture->Load();
+}
+
+TextureCubeMap* AssetManager::GetCubemapTextureByName(const std::string& name) {
+  for (TextureCubeMap& texture : g_cubemapTextures) {
+    if (texture.GetName() == name) {
+      return &texture;
+    }
+  }
+  std::cout << "AssetManager::GetCubemapTextureByName() failed because '" << name
+            << "' does not exist\n";
+  return nullptr;
+}
+
+TextureCubeMap* AssetManager::GetCubemapTextureByIndex(const int index) {
+  if (index >= 0 && index < g_cubemapTextures.size()) {
+    return &g_cubemapTextures[index];
+  }
+  std::cout << "AssetManager::GetCubemapTextureByIndex() failed because index '" << index
+            << "' is out of range. Size is " << g_cubemapTextures.size() << "!\n";
+  return nullptr;
+}
+
+int AssetManager::GetCubemapTextureIndexByName(const std::string& name) {
+  for (int i = 0; i < g_cubemapTextures.size(); i++) {
+    if (g_cubemapTextures[i].GetName() == name) {
+      return i;
+    }
+  }
+  std::cout << "AssetManager::GetCubemapTextureIndexByName() failed because '" << name
+            << "' does not exist\n";
+  return -1;
 }

@@ -31,7 +31,7 @@ int GetFullScreenWidth();
 int GetFullScreenHeight();
 
 // Render Targets
-void SetPresentTargetSize(int width, int height);
+//void SetPresentTargetSize(int width, int height);
 int GetPresentTargetWidth();
 int GetPresentTargetHeight();
 }  // namespace Back

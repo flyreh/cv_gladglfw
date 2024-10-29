@@ -26,6 +26,7 @@ void OpenGLRenderer::HotloadShaders() {
   std::cout << "Hotloading shaders...\n";
 
   g_shaders.Cube.Load("GL_Cube.vert", "GL_Cube.frag");
+  g_shaders.cubeMap.Load("GL_CubeMap.vert", "GL_CubeMap.frag");
 
   /*Demás Shaders*/
 
@@ -47,10 +48,13 @@ void OpenGLRenderer::ObjectsPass() {
 
   //Creación de VAO y VBO para otro objeto
 
+  AssetManager::UploadVertexDataCubeMap();
+
 }
 
 void OpenGLRenderer::ActivateCubeShader() {
   g_shaders.Cube.Use();
+  g_shaders.Cube.SetInt("texture1", 0);
 }
 
 void OpenGLRenderer::ActivateCubeVAO() {
@@ -61,7 +65,7 @@ void OpenGLRenderer::ActivateCubeTexture(std::string textureName) {
 
 
   TextureObject* cubeTexture = AssetManager::GetTextureByName(textureName);
-
+  
   if (cubeTexture) {
     glBindTexture(GL_TEXTURE_2D, cubeTexture->GetGLTexture().GetID());
   }
@@ -79,3 +83,44 @@ void OpenGLRenderer::DeleteCubeVBO() {
   glDeleteBuffers(1, &cubeVBO);
   std::cout << "Cube VBO delete"<<std::endl;
 }
+
+
+
+
+void OpenGLRenderer::ActivateCubeMapShader() {
+  g_shaders.cubeMap.Use();
+  std::cout << "CubeMap Shader ID :::: " <<g_shaders.cubeMap.GetId() << std::endl;
+  g_shaders.cubeMap.SetInt("skybox", 0);
+}
+
+void OpenGLRenderer::ActivateCubeMapVAO() {
+  glBindVertexArray(GLBackVertex::GetCubeMapVAO());
+}
+
+void OpenGLRenderer::ActivateTextureCubeMap(std::string textureName) {
+  TextureCubeMap* cubeMapTexture = AssetManager::GetCubemapTextureByName(textureName);
+  
+  if (cubeMapTexture) {
+    
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture->GetGLtextureCubeMap().GetID());
+    std::cout << "Texture CubeMap ID: " << cubeMapTexture->GetGLtextureCubeMap().GetID()
+              << " Nombre : "<< cubeMapTexture->GetName()<<std::endl;
+
+  }
+}
+
+void OpenGLRenderer::DeleteCubeMapVAO() {
+  unsigned int cubeMapVAO = GLBackVertex::GetCubeMapVAO();
+  glDeleteVertexArrays(1, &cubeMapVAO);
+
+  std::cout << "Cube VAO delete" << std::endl;
+}
+
+void OpenGLRenderer::DeleteCubeMapVBO() {
+  unsigned int cubeMapVBO = GLBackVertex::GetCubeMapVBO();
+  glDeleteBuffers(1, &cubeMapVBO);
+  std::cout << "Cube VBO delete" << std::endl;
+}
+
+
+

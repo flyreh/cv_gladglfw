@@ -32,6 +32,7 @@ namespace OpenGLRenderer {
         Shader winston;
         Shader megaTextureBloodDecals;
         Shader Cube;
+        Shader cubeMap;
     };
 
     extern Shaders g_shaders;
@@ -51,6 +52,16 @@ namespace OpenGLRenderer {
     void DeleteCubeVAO();
 
     void DeleteCubeVBO();
+
+    void ActivateCubeMapShader();
+
+    void ActivateCubeMapVAO();
+
+    void ActivateTextureCubeMap(std::string textureName);
+
+    void DeleteCubeMapVAO();
+
+    void DeleteCubeMapVBO();
 
 
 

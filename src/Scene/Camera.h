@@ -38,6 +38,8 @@ public:
 
 	static glm::vec3 GetCameraUp();
 
+	static glm::mat4 GetViewMatrix();
+
 
 };
 
