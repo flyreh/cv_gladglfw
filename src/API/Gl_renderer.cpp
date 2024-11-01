@@ -40,6 +40,7 @@ void OpenGLRenderer::InitMinimum() {
 }
 
 void OpenGLRenderer::ObjectsPass() {
+
   // Carga vertices del .obj
   // std::vector<glm::vec2> CubeVertices = Util.GenerateVerticesCube();
 

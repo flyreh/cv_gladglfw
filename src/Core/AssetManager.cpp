@@ -32,6 +32,8 @@ namespace AssetManager {
 
     std::vector<float> g_vertices;
 
+    std::vector<float> g_verticesNormals;
+
     std::vector<float> g_verticesCubeMap;
 
     std::vector<std::future<void>> _futures;
@@ -138,7 +140,53 @@ void AssetManager::LoadAssetPath() {
 
 void AssetManager::CreateVertexData() {
     g_vertices = {
-    // positions          // normals
+    // Positions (3)   // Texture Coords (2)
+    // Trasera (z = -0.5)
+    -0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+     0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+     0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+    // frontal (z = 0.5)
+    -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+    // Izquierda (x = -0.5)
+    -0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
+    // Derecha (x = 0.5)
+    0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
+    0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
+    0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+    0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+    0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+    0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
+    // Inferior (y = -0.5)
+    -0.5f, -0.5f,  0.5f, 0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f, 1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+     0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f, 0.0f, 1.0f,
+    // Superior (y = 0.5)
+    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
+
+    };
+    g_verticesNormals = {
+        // positions          // normals
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
          0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
          0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -180,8 +228,7 @@ void AssetManager::CreateVertexData() {
          0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
         -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-
-};
+  };
 
 }
 
@@ -252,21 +299,22 @@ std::vector<TextureObject>& AssetManager::GetTextures() {
 
 
 void AssetManager::UploadVertexDataCubeMap() {
+
     float skyboxVertices[] = {
     //   Coordinates
-    -1.0f, -1.0f, 1.0f,   //        7--------6
-    1.0f,  -1.0f, 1.0f,   //       /|       /|
-    1.0f,  -1.0f, -1.0f,  //      4--------5 |
-    -1.0f, -1.0f, -1.0f,  //      | |      | |
-    -1.0f, 1.0f,  1.0f,   //      | 3------|-2
-    1.0f,  1.0f,  1.0f,   //      |/       |/
-    1.0f,  1.0f,  -1.0f,  //      0--------1
-    -1.0f, 1.0f,  -1.0f
+    -1.0f, -1.0f, 1.0f,   //0        7--------6
+    1.0f,  -1.0f, 1.0f,    //1      /|       /|
+    1.0f,  -1.0f, -1.0f,  //2      4--------5 |
+    -1.0f, -1.0f, -1.0f,  //3      | |      | |
+    -1.0f, 1.0f,  1.0f,   //4      | 3------|-2
+    1.0f,  1.0f,  1.0f,   //5      |/       |/
+    1.0f,  1.0f,  -1.0f,  //6      0--------1
+    -1.0f, 1.0f,  -1.0f   //7
 };
 
 unsigned int skyboxIndices[] = {
     // Right
-    1, 2, 6, 6, 5, 1,
+    2, 6, 5, 5, 1, 2,
     // Left
     0, 4, 7, 7, 3, 0,
     // Top

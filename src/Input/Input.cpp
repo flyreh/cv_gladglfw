@@ -72,7 +72,7 @@ namespace Input {
             if (_keyDown[i] && !_keyDownLastFrame[i])
             {
                 _keyPressed[i] = true;
-                std::cout << "Key: " << i << " Presionada" << std::endl;
+                //std::cout << "Key: " << i << " Presionada" << std::endl;
             }
             else
                 _keyPressed[i] = false;

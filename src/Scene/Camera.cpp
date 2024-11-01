@@ -15,6 +15,8 @@ float Camera::lastY = 0;
 
 bool Camera::firstMouse = false;
 
+float sensitivity = 0.0f;
+
 
 void Camera::Init() {
 
@@ -29,12 +31,12 @@ void Camera::Init() {
 	lastY = 300;
 
 	firstMouse = true;
+    sensitivity = 0.1f;
 
 }
 void  Camera::Update(float deltatime) {
 
-	float cameraSpeed = 2.5f * deltatime;
-	float sensitivity = 0.1f;
+	float cameraSpeed = 3.0f * deltatime;
 
 	if (Input::KeyDown(GLFW_KEY_W))
 		cameraPos += cameraSpeed * cameraFront;

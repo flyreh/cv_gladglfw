@@ -24,19 +24,28 @@ double timeDiff;
 // frames counter
 unsigned int counter = 0;
 
+void DrawCubeMap();
+
 
 int main() {
 
 	//inicio de las configuraciones de la ventana, de glfw y glad. Además carga y compila todos los shaders que definamos (por ahora solo hay del cubo).
     Back::Init();
 
-
      //// Enables the Depth Buffer
      glEnable(GL_DEPTH_TEST);
 
+    //Front face culling, desactiva para ver el cubo con caras ocultas
+
+	/*glEnable(GL_CULL_FACE);
+	
+	glCullFace(GL_FRONT);
+	
+	glFrontFace(GL_CCW);*/
+
+
      // Creación de VAO y VBO para cada objeto a Renderizar
      OpenGLRenderer::ObjectsPass();
-
 
     while (Back::WindowIsOpen()){
         
@@ -99,12 +108,13 @@ int main() {
          //// Activación del VAO del cubo
         OpenGLRenderer::ActivateCubeVAO();
         glActiveTexture(GL_TEXTURE0);
-        // Activación de la textura del cubo
-        OpenGLRenderer::ActivateCubeTexture("Purple2");
+        // Activación de la textura del cubo por su nombre.
+
+        OpenGLRenderer::ActivateCubeTexture("Cube");
 
         // Primer Cubo con rotación
-        glm::mat4 modelFirstCube = glm::rotate(glm::mat4(1.0f), (float)currentFrame/2,
-                                               glm::vec3(1.0f, 0.0f, 0.0f));  // Rotación del cubo
+        glm::mat4 modelFirstCube = glm::rotate(glm::mat4(1.0f), (float)currentFrame/4,
+                                               glm::vec3(0.0f, 1.0f, 0.0f));  // Rotación del cubo
 
         OpenGLRenderer::g_shaders.Cube.SetMat4("model", modelFirstCube);
 
@@ -113,36 +123,14 @@ int main() {
         //// Esto Dibuja un segundo cubo, con escala, rotación y traslación
         glm::mat4 modelOtherCube = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 4.0f, -5.0f));
         modelOtherCube = glm::scale(modelOtherCube, glm::vec3(2.0f, 2.0f, 2.0f));
-        modelOtherCube = glm::rotate(modelOtherCube, (float)currentFrame/2, glm::vec3(1.0f, 0.0f, 1.0f));
+        modelOtherCube = glm::rotate(modelOtherCube, (float)currentFrame/4, glm::vec3(0.0f, 1.0f, 0.0f));
 
         OpenGLRenderer::g_shaders.Cube.SetMat4("model", modelOtherCube);
 
-        glDrawArrays(GL_TRIANGLES, 0, 50);  // Dibuja
+        glDrawArrays(GL_TRIANGLES, 0, 50);  // 
 
-        // Activación del cubemap
 
-        glDepthFunc(GL_LEQUAL);  // Cambiar test de profundidad para el cubemap
-
-        OpenGLRenderer::ActivateCubeMapShader();
-
-        view = glm::mat4(glm::mat3(Camera::GetViewMatrix())); // Sin traslación para el cubemap
-        projection = glm::perspective(glm::radians(45.0f), Back::GetWindowedWidth() / Back::GetCurrentWindowHeight(), 0.1f, 100.0f);
-        OpenGLRenderer::g_shaders.cubeMap.SetMat4("view", view);
-        OpenGLRenderer::g_shaders.cubeMap.SetMat4("projection", projection);
-
-        // Activamos el VAO del cubemap
-        OpenGLRenderer::ActivateCubeMapVAO();
-
-        glActiveTexture(GL_TEXTURE0);
-
-        // Activamos la Textura del cubemap por su nombre
-        OpenGLRenderer::ActivateTextureCubeMap("Sky");
-
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
-        glBindVertexArray(0);
-
-        glDepthFunc(GL_LESS);  // Restaura el test de profundidad
+        DrawCubeMap();
 
 	    Back::EndFrame();
     }
@@ -157,4 +145,34 @@ int main() {
     OpenGLRenderer::DeleteCubeMapVBO();
 
     return 0;
+}
+
+void DrawCubeMap(){
+
+  // Activación del cubemap
+
+  glDepthFunc(GL_LEQUAL);  // Cambiar test de profundidad para el cubemap
+
+  OpenGLRenderer::ActivateCubeMapShader();
+
+  glm::mat4 view = glm::mat4(glm::mat3(Camera::GetViewMatrix()));  // Sin traslación para el cubemap
+  glm::mat4 projection = glm::perspective(
+      glm::radians(45.0f), Back::GetWindowedWidth() / Back::GetCurrentWindowHeight(), 0.1f, 100.0f);
+  OpenGLRenderer::g_shaders.cubeMap.SetMat4("view", view);
+  OpenGLRenderer::g_shaders.cubeMap.SetMat4("projection", projection);
+
+  // Activamos el VAO del cubemap
+  OpenGLRenderer::ActivateCubeMapVAO();
+
+  glActiveTexture(GL_TEXTURE0);
+
+  // Activamos la Textura del cubemap por su nombre
+  OpenGLRenderer::ActivateTextureCubeMap("Moonlight");
+
+  glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+  glBindVertexArray(0);
+
+  glDepthFunc(GL_LESS);  // Restaura el test de profundidad
+    
 }

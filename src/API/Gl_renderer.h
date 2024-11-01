@@ -17,10 +17,8 @@ namespace OpenGLRenderer {
         Shader glass;
         Shader horizontalBlur;
         Shader verticalBlur;
-        Shader decalsBlood;
         Shader decalsBullet;
         Shader vatBlood;
-        Shader skyBox;
         Shader debugProbes;
         Shader csg;
         Shader outline;
@@ -30,7 +28,6 @@ namespace OpenGLRenderer {
         Shader heightMap;
         Shader debugLightVolumeAabb;
         Shader winston;
-        Shader megaTextureBloodDecals;
         Shader Cube;
         Shader cubeMap;
     };
