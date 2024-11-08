@@ -5,3 +5,5 @@ uniform sampler2D texture1;               // Textura a usar
 void main() {
     fragColor = texture(texture1, TexCoord);  // Aplicar la textura
 }
+
+

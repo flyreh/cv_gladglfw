@@ -92,18 +92,8 @@ void Init() {
   // Carga de los assets: Texturas y Modelos. 
   AssetManager::LoadAssetPath();
 
-  
-
-  // Gizmo::Init();
-
-//  glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
-
-  /*
-        AssetManager::LoadFont();
-        */
-
   Input::Init();
-  Camera::Init();
+ // camera.Init();
  
   glfwShowWindow(Back::GetWindowPointer());
   

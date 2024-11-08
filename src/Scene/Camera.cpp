@@ -3,21 +3,6 @@
 
 
 
-glm::vec3 Camera::cameraPos = glm::vec3(0);
-glm::vec3 Camera::cameraFront = glm::vec3(0);
-glm::vec3 Camera::cameraUp = glm::vec3(0);
-
-float Camera::yaw = 0.0f;
-float Camera::pitch = 0.0f;
-
-float Camera::lastX = 0;
-float Camera::lastY = 0;
-
-bool Camera::firstMouse = false;
-
-float sensitivity = 0.0f;
-
-
 void Camera::Init() {
 
 	cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
@@ -33,10 +18,35 @@ void Camera::Init() {
 	firstMouse = true;
     sensitivity = 0.1f;
 
+
 }
+
+Camera* Camera::activeCamera = nullptr;
+
+void Camera::UpdateCameraInput(float deltaTime, Camera& camera1, Camera& camera2) {
+
+  if (Input::KeyDown(GLFW_KEY_1)) {
+
+
+
+	  std::cout << "Cambio a camara 1"  << std::endl;
+    activeCamera = &camera1;  // Cambiar a la primera cámara
+  }
+  if (Input::KeyDown(GLFW_KEY_2)) {
+
+
+    std::cout << "Cambio a camara 2" << std::endl;
+    activeCamera = &camera2;  // Cambiar a la segunda cámara
+  }
+ 
+  // Actualiza solo la cámara activa
+  activeCamera->Update(deltaTime);
+}
+
+
 void  Camera::Update(float deltatime) {
 
-	float cameraSpeed = 3.0f * deltatime;
+	float cameraSpeed = 5.0f * deltatime;
 
 	if (Input::KeyDown(GLFW_KEY_W))
 		cameraPos += cameraSpeed * cameraFront;
@@ -108,6 +118,9 @@ void Camera::SetCameraUp(glm::vec3 up) {
 glm::mat4 Camera::GetViewMatrix(){
   return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 }
+
+
+
 
 
 

@@ -165,7 +165,7 @@ bool OpenGLTexture::Load(const std::string filepath, bool compressed) {
 TextureData LoadTextureData(std::string filepath) {
 
   std::cout << "filepathTexture : " << filepath << std::endl;
-  stbi_set_flip_vertically_on_load(true);
+  stbi_set_flip_vertically_on_load(false);
   TextureData textureData;
   std::cout << "filepath data : " << filepath.data() << std::endl;
   textureData.m_data = stbi_load(filepath.data(), &textureData.m_width, &textureData.m_height,

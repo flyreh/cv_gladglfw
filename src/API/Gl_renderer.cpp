@@ -47,7 +47,7 @@ void OpenGLRenderer::ObjectsPass() {
   // Creación de VAO y VBO para el cubo
   AssetManager::UploadVertexData();
 
-  //Creación de VAO y VBO para otro objeto
+  //Creación de VAO y VBO para CubeMap
 
   AssetManager::UploadVertexDataCubeMap();
 
@@ -111,13 +111,13 @@ void OpenGLRenderer::DeleteCubeMapVAO() {
   unsigned int cubeMapVAO = GLBackVertex::GetCubeMapVAO();
   glDeleteVertexArrays(1, &cubeMapVAO);
 
-  std::cout << "Cube VAO delete" << std::endl;
+  std::cout << "CubeMap VAO delete" << std::endl;
 }
 
 void OpenGLRenderer::DeleteCubeMapVBO() {
   unsigned int cubeMapVBO = GLBackVertex::GetCubeMapVBO();
   glDeleteBuffers(1, &cubeMapVBO);
-  std::cout << "Cube VBO delete" << std::endl;
+  std::cout << "CubeMap VBO delete" << std::endl;
 }
 
 

@@ -8,37 +8,60 @@ class Camera {
 
 private :
 
-	static glm::vec3 cameraPos;
-	static glm::vec3 cameraFront;
-	static glm::vec3 cameraUp;
+	 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
+ glm::vec3 cameraFront = (glm::vec3(0.0f, 0.0f, -1.0f));
+	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
-	static float yaw;
-	static float pitch;
+	float yaw = -90.0f;
+	float pitch  = 0.0f;
 
-	static float lastX, lastY;
+	float lastX = 400;
+	float lastY = 300;
 
-	static bool firstMouse;
+	bool firstMouse = true;
+
+	float sensitivity = 0.1f;
+
 
 public:
+    static Camera* activeCamera; 
 
-	static void Init();
+	Camera()
+        : cameraPos(glm::vec3(0.0f, 0.0f, 5.0f)),
+          cameraFront(glm::vec3(0.0f, 0.0f, -1.0f)),
+          cameraUp(glm::vec3(0.0f, 1.0f, 0.0f)),
+          yaw(-90.0f),
+          pitch(0.0f),
+          lastX(400),
+          lastY(300),
+          firstMouse(true),
+          sensitivity(0.1f)
+	{}
 
-	static void Update(float deltatime);
 
-	static void SetCameraPos(glm::vec3 pos);
+	 void Init();
 
-	static void SetCameraFront(glm::vec3 front);
+	void Update(float deltatime);
 
-	static void SetCameraUp(glm::vec3 up);
+	void SetCameraPos(glm::vec3 pos);
+
+	void SetCameraFront(glm::vec3 front);
+
+	void SetCameraUp(glm::vec3 up);
+
+	void UpdateCameraInput(float deltaTime, Camera& camera1, Camera& camera2);
 
 
-	static glm::vec3 GetCameraPos();
+	glm::vec3 GetCameraPos();
 
-	static glm::vec3 GetCameraFront();
+	glm::vec3 GetCameraFront();
 
-	static glm::vec3 GetCameraUp();
+	glm::vec3 GetCameraUp();
 
-	static glm::mat4 GetViewMatrix();
+	glm::mat4 GetViewMatrix();
+
+
+
 
 
 };
