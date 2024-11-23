@@ -121,7 +121,7 @@ bool OpenGLTexture::Load(const std::string filepath, bool compressed) {
   this->_NumOfChannels = textureData.m_numChannels;
 
   std::cout << "Load Texture : " << m_filename << " width : " << textureData.m_width
-            << ", height : " << textureData.m_height << "Numero de canales : "<<textureData.m_numChannels<<std::endl;
+            << ", height : " << textureData.m_height << "Channels : "<<textureData.m_numChannels<<std::endl;
 
   return true;
 }
@@ -164,10 +164,8 @@ bool OpenGLTexture::Load(const std::string filepath, bool compressed) {
 
 TextureData LoadTextureData(std::string filepath) {
 
-  std::cout << "filepathTexture : " << filepath << std::endl;
   stbi_set_flip_vertically_on_load(false);
   TextureData textureData;
-  std::cout << "filepath data : " << filepath.data() << std::endl;
   textureData.m_data = stbi_load(filepath.data(), &textureData.m_width, &textureData.m_height,
                                  &textureData.m_numChannels, STBI_rgb_alpha);
 
@@ -206,8 +204,14 @@ bool OpenGLTexture::Bake() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
+    if (_NumOfChannels == 1) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, _width, _height, 0, GL_RED, GL_UNSIGNED_BYTE, m_data);
+    }
+    else {
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_data);
+    }
     
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_data);
 
     glGenerateMipmap(GL_TEXTURE_2D);
 

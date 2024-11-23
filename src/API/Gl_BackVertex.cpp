@@ -132,12 +132,16 @@ void GLBackVertex::UploadCubeVertexData(std::vector<float> vertices) {
 
   // Configura los atributos de los vértices
   // Posición de los vértices
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
 
-  // Coordenadas de Normales
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+  // Coordenadas de textura
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
+
+  // Coordenadas de los vectores Normales
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+  glEnableVertexAttribArray(2);
 
   glBindVertexArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -188,13 +192,7 @@ void GLBackVertex::UploadCubeMapVertexData(const float (&skyboxVertices)[24], co
   glBindVertexArray(0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-  /*glEnableVertexAttribArray(0);
- 
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  
-  glBindVertexArray(0);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);*/
 }
 
 

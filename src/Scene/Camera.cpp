@@ -1,33 +1,15 @@
 #include "Camera.h"
 #include "../Input/Input.h"
-
-
-
-void Camera::Init() {
-
-	cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
-	cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-	cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
-	yaw = -90.0f;
-	pitch = 0.0f;
-
-	lastX = 400;
-	lastY = 300;
-
-	firstMouse = true;
-    sensitivity = 0.1f;
-
-
-}
+#include "../Back/Back.h"
 
 Camera* Camera::activeCamera = nullptr;
 
-void Camera::UpdateCameraInput(float deltaTime, Camera& camera1, Camera& camera2) {
+Camera camera1;
+Camera camera2;
+
+void Camera::UpdateCameraInput(float deltaTime /*Camera& camera1, Camera& camera2*/ ) {
 
   if (Input::KeyDown(GLFW_KEY_1)) {
-
-
 
 	  std::cout << "Cambio a camara 1"  << std::endl;
     activeCamera = &camera1;  // Cambiar a la primera cámara
@@ -43,8 +25,18 @@ void Camera::UpdateCameraInput(float deltaTime, Camera& camera1, Camera& camera2
   activeCamera->Update(deltaTime);
 }
 
+void Camera::Init() {
 
-void  Camera::Update(float deltatime) {
+	camera1 = Camera();
+
+	camera2 = Camera();
+
+	activeCamera = &camera1;
+	
+	camera2.SetCameraPos(glm::vec3(3.0f, 0.0f, 5.0f));
+}
+
+void Camera::Update(float deltatime) {
 
 	float cameraSpeed = 5.0f * deltatime;
 
@@ -117,6 +109,10 @@ void Camera::SetCameraUp(glm::vec3 up) {
 
 glm::mat4 Camera::GetViewMatrix(){
   return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+}
+
+glm::mat4 Camera::GetProjectionMatrix() {
+	return glm::perspective(glm::radians(45.0f), Back::GetWindowedWidth() / Back::GetWindowedHeight(), 0.1f, 1000.0f);
 }
 
 

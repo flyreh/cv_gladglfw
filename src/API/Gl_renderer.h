@@ -1,6 +1,7 @@
 #pragma once
 #include "../Enviroment/CV_Enviroment.h"
 #include "Types/GL_shader.h"
+#include "../Math/Frustum.h"
 
 namespace OpenGLRenderer {
 
@@ -28,11 +29,13 @@ namespace OpenGLRenderer {
         Shader heightMap;
         Shader debugLightVolumeAabb;
         Shader winston;
-        Shader Cube;
+        Shader DefectCube;
+        Shader CubeMirror;
         Shader cubeMap;
     };
 
     extern Shaders g_shaders;
+
 
     void InitMinimum();
   
@@ -40,7 +43,11 @@ namespace OpenGLRenderer {
 
     void ObjectsPass();
 
-    void ActivateCubeShader();
+    void RenderFrame();
+
+    void ActivateCubeMirrorShader();
+   
+	void ActivateCubeDefectShader();
 
     void ActivateCubeVAO();
 

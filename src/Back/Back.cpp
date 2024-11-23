@@ -22,6 +22,19 @@ int _currentWindowWidth = 0;
 int _currentWindowHeight = 0;
 int _presentTargetWidth = 0;
 int _presentTargetHeight = 0;
+// Frame
+bool firstFrame = true;
+double currentFrame = 0.0f;
+double deltaTime = 0.0f;
+double lastFrame = 0.0f;
+
+// FPS
+double prevTime = 0.0;
+double crntTime = 0.0;
+double timeDiff;
+
+// frames counter
+unsigned int counter = 0;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void window_focus_callback(GLFWwindow* window, int focused);
@@ -86,15 +99,16 @@ void Init() {
   std::cout << "\nGPU: " << renderer << "\n";
   std::cout << "GL version: " << major << "." << minor << "\n\n";
 
-  //Carga y Compila los Shaders para los objetos
+  //Carga y Compila los Shaders para los objetos, Creación de Buffers VAO, VBO y EBO
   OpenGLRenderer::InitMinimum();
 
   // Carga de los assets: Texturas y Modelos. 
   AssetManager::LoadAssetPath();
 
   Input::Init();
- // camera.Init();
- 
+  Camera::Init();
+
+
   glfwShowWindow(Back::GetWindowPointer());
   
 }
@@ -108,7 +122,32 @@ void EndFrame() {
 }
 
 void UpdateSubSystems() {
-  Input::Update();
+
+    Input::Update();
+
+    // Updates counter and times
+    crntTime = glfwGetTime();
+    timeDiff = crntTime - prevTime;
+    counter++;
+
+    if (timeDiff >= 1.0 / 30.0) {
+        std::string FPS = std::to_string((1.0 / timeDiff) * counter);
+        std::string ms = std::to_string((timeDiff / counter) * 1000);
+        std::string newTitle = "Frustum Culling/ " + FPS + "FPS / " + ms + "ms";
+        glfwSetWindowTitle(Back::GetWindowPointer(), newTitle.c_str());
+        prevTime = crntTime;
+        counter = 0;
+    }
+    if (firstFrame) {
+        currentFrame = glfwGetTime();
+        firstFrame = false;
+    }
+    lastFrame = currentFrame;
+    currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+
+    Camera::activeCamera->UpdateCameraInput(deltaTime);
+
 }
 
 void CleanUp() {
@@ -201,6 +240,13 @@ int GetCurrentWindowHeight() {
   return _currentWindowHeight;
 }
 
+double GetCurrentFrame() {
+	return currentFrame;
+}
+
+double GetDeltaTime() {
+    return deltaTime;
+}
 bool WindowIsOpen() {
   return !(glfwWindowShouldClose(_window) || _forceCloseWindow);
 }

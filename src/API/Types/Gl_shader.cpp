@@ -67,7 +67,7 @@ void Shader::Load(std::string vertexPath, std::string fragmentPath) {
 
  m_ID = tempID;
     
-  checkCompileErrors(m_ID, "FRAGMENT");
+  checkCompileErrors(m_ID, "PROGRAM");
 
     m_uniformsLocations.clear();
    
@@ -105,7 +105,7 @@ void Shader::SetBool(const std::string& name, bool value) {
 }
 
 void Shader::SetInt(const std::string& name, int value) {
-  glUniform1i(glGetUniformLocation(m_ID, name.c_str()), 0);
+  glUniform1i(glGetUniformLocation(m_ID, name.c_str()), value);
 }
 
 void Shader::SetFloat(const std::string& name, float value) {

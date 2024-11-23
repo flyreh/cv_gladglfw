@@ -8,8 +8,8 @@ class Camera {
 
 private :
 
-	 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
- glm::vec3 cameraFront = (glm::vec3(0.0f, 0.0f, -1.0f));
+	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
+	glm::vec3 cameraFront = (glm::vec3(0.0f, 0.0f, -1.0f));
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 	float yaw = -90.0f;
@@ -26,6 +26,8 @@ private :
 public:
     static Camera* activeCamera; 
 
+	void static Init();
+
 	Camera()
         : cameraPos(glm::vec3(0.0f, 0.0f, 5.0f)),
           cameraFront(glm::vec3(0.0f, 0.0f, -1.0f)),
@@ -38,9 +40,6 @@ public:
           sensitivity(0.1f)
 	{}
 
-
-	 void Init();
-
 	void Update(float deltatime);
 
 	void SetCameraPos(glm::vec3 pos);
@@ -49,7 +48,7 @@ public:
 
 	void SetCameraUp(glm::vec3 up);
 
-	void UpdateCameraInput(float deltaTime, Camera& camera1, Camera& camera2);
+	void UpdateCameraInput(float deltaTime);
 
 
 	glm::vec3 GetCameraPos();
@@ -59,6 +58,8 @@ public:
 	glm::vec3 GetCameraUp();
 
 	glm::mat4 GetViewMatrix();
+
+	glm::mat4 GetProjectionMatrix();
 
 
 

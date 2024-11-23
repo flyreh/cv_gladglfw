@@ -29,7 +29,8 @@ int GetCurrentWindowWidth();
 int GetCurrentWindowHeight();
 int GetFullScreenWidth();
 int GetFullScreenHeight();
-
+double GetCurrentFrame();
+double GetDeltaTime();
 // Render Targets
 //void SetPresentTargetSize(int width, int height);
 int GetPresentTargetWidth();

@@ -33,7 +33,7 @@ void OpenGLCubemapTexture::Load (std::string name, std::string filetype) {
 
     for (int i = 0; i < 6; i++) {
       if (m_textureData[i].m_data != nullptr) {
-        std::cout << "Loaded Texture: " << filepaths[i] << std::endl;
+        std::cout << "Loaded Texture CubeMap: " << filepaths[i] << std::endl;
       } else {
         std::cout << "Failed to load Texture: " << filepaths[i] << std::endl;
       }
