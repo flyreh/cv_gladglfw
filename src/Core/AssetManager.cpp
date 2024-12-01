@@ -1,4 +1,3 @@
-#define TINYOBJLOADER_IMPLEMENTATION
 #include "AssetManager.h"
 #include "../API/GL_BackVertex.h"
 #include "../API/GL_renderer.h"
@@ -74,12 +73,12 @@ namespace AssetManager {
     int _quadMeshIndexQuadscreenBottomRight = 0;
     int _halfSizeQuadMeshIndex = 0;
 
-    
+
 }  // namespace AssetManager
 
 
 void AssetManager::LoadAssetPath() {
-    
+
 
       // Textures
 
@@ -102,7 +101,7 @@ void AssetManager::LoadAssetPath() {
             std::cout << info.fullpath << "\n";
 
             g_cubemapTextures.emplace_back(TextureCubeMap(info.fullpath));
-            
+
           }
         }
       }
@@ -130,12 +129,12 @@ void AssetManager::LoadAssetPath() {
 
       ////Bake Texturas
       for (TextureObject& texture : g_textures) {
-        
+
         texture.GetGLTexture().Bake();
       }
 
       std::cout<<"Uploading textures and models to GPU"<<std::endl;
-     
+
  }
 
 void AssetManager::CreateVertexData() {
@@ -159,7 +158,7 @@ void AssetManager::CreateVertexData() {
 	-0.5f,  0.5f,  0.5f, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
 	-0.5f,  0.5f, -0.5f, 0.0f, 1.0f, -1.0f,  0.0f, 0.0f,
 	-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f, 
+	-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
 	-0.5f, -0.5f,  0.5f, 1.0f, 0.0f, -1.0f,  0.0f, 0.0f,
 	-0.5f,  0.5f,  0.5f, 1.0f, 1.0f, -1.0f,  0.0f, 0.0f,
     // Derecha (x = 0.5)
@@ -172,7 +171,7 @@ void AssetManager::CreateVertexData() {
     // Inferior (y = -0.5)
 	-0.5f, -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
 	 0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f,   
+     0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
 	 0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
 	-0.5f, -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
 	-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
@@ -235,11 +234,11 @@ void AssetManager::CreateVertexData() {
 
 void AssetManager::UploadVertexData() {
     //Carga de vertices del objeto.
-   CreateVertexData(); 
+   CreateVertexData();
 
-   // Creación de VAO and VBO para el cubo
+   // Creaciï¿½n de VAO and VBO para el cubo
    GLBackVertex::UploadCubeVertexData(g_vertices);
-    
+
 }
 
 bool AssetManager::TextureExists(const std::string& filename) {
@@ -327,7 +326,7 @@ unsigned int skyboxIndices[] = {
     3, 7, 6, 6, 2, 3
 };
 
-  
+
   GLBackVertex::UploadCubeMapVertexData(skyboxVertices, skyboxIndices);
 
 }

@@ -17,6 +17,7 @@ find_package(glm REQUIRED)
 find_package(gli CONFIG REQUIRED)
 find_package(nlohmann_json REQUIRED )
 find_package(stb REQUIRED)
+find_package (tinyobjloader REQUIRED)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/**/*.cpp")
 
@@ -31,6 +32,6 @@ if(CMAKE_VERSION VERSION_GREATER 3.12)
 endif()
 
 target_include_directories(cv_gladglfw PRIVATE "${CMAKE_SOURCE_DIR}\\out\\build\\x64-debug\\vcpkg_installed\\x64-windows\\include")
-target_link_libraries(cv_gladglfw PRIVATE OpenGL::GL glfw glad::glad glm::glm gli nlohmann_json::nlohmann_json ${stb_INCLUDE_DIR})
+target_link_libraries(cv_gladglfw PRIVATE OpenGL::GL glfw glad::glad glm::glm gli nlohmann_json::nlohmann_json tinyobjloader::tinyobjloader ${stb_INCLUDE_DIR})
 
 target_compile_definitions(cv_gladglfw PRIVATE SHADERS_DIR="${SHADERS_DIR}")

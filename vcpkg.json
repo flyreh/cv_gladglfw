@@ -5,6 +5,7 @@
     "gli",
     "glm",
     "nlohmann-json",
-    "stb"
+    "stb",
+    "tinyobjloader"
   ]
 }
