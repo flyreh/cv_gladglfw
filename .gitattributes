@@ -1,3 +1,0 @@
-*.cpp filter=formatclean
-*.h filter=formatclean
-*.hpp filter=formatclean
