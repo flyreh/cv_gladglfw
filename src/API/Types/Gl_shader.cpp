@@ -65,11 +65,16 @@ void Shader::Load(std::string vertexPath, std::string fragmentPath) {
   glAttachShader(tempID, fragment);
   glLinkProgram(tempID);
 
- m_ID = tempID;
-    
-  checkCompileErrors(m_ID, "PROGRAM");
-
-    m_uniformsLocations.clear();
+  if (checkCompileErrors(tempID, "PROGRAM")) {
+      if (m_ID != -1) {
+          glDeleteProgram(m_ID);
+      }
+      m_ID = tempID;
+      m_uniformsLocations.clear();
+  }
+  else {
+      std::cout << "shader failed to compile " << vertexPath << " " << fragmentPath << "\n";
+  }
    
   glDeleteShader(vertex);
   glDeleteShader(fragment);
@@ -84,12 +89,21 @@ int Shader::GetId() {
 void Shader::SetMat4(const std::string& name, glm::mat4 &value) {
   glUniformMatrix4fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
+void Shader::SetMat3(const std::string& name, glm::mat3& value) {
+    glUniformMatrix3fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+}
 
 void Shader::SetVec3(const std::string& name, const glm::vec3& value) {
   if (m_uniformsLocations.find(name) == m_uniformsLocations.end())
     m_uniformsLocations[name] = glGetUniformLocation(m_ID, name.c_str());
 
   glUniform3fv(m_uniformsLocations[name], 1, &value[0]);
+}
+
+void Shader::SetVec4(const std::string& name, const glm::vec4& value) {
+	if (m_uniformsLocations.find(name) == m_uniformsLocations.end())
+		m_uniformsLocations[name] = glGetUniformLocation(m_ID, name.c_str());
+	glUniform4fv(m_uniformsLocations[name], 1, &value[0]);
 }
 
 void Shader::SetVec2(const std::string& name, const glm::vec2& value) {

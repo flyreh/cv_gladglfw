@@ -62,21 +62,21 @@ namespace Input {
             if (glfwGetKey(_window, i) == GLFW_PRESS)
             {
                 _keyDown[i] = true;
-				//std::cout << "Key: " << i <<" Presionada"<< std::endl;
             }
-
-            else
+            else {
                 _keyDown[i] = false;
+            }
 
             // press
             if (_keyDown[i] && !_keyDownLastFrame[i])
             {
                 _keyPressed[i] = true;
-                //std::cout << "Key: " << i << " Presionada" << std::endl;
             }
-            else
+            else {
                 _keyPressed[i] = false;
+            }
             _keyDownLastFrame[i] = _keyDown[i];
+
         }
 
         // Mouse

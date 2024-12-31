@@ -35,6 +35,8 @@ namespace AssetManager {
     void UploadVertexData();
     void CreateVertexData();
 
+    void UploadVertexLight();
+
     void UploadVertexDataCubeMap();
 	// Para modelos
 

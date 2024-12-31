@@ -33,7 +33,6 @@ int main() {
 
     OpenGLRenderer::RenderFrame();
 
-    std::cout << "Frame: " << Back::GetCurrentFrame() << std::endl;
     // glDisable(GL_CULL_FACE);
 
     Back::EndFrame();
@@ -49,4 +48,5 @@ int main() {
   OpenGLRenderer::DeleteCubeMapVBO();
 
   return 0;
+  
 }

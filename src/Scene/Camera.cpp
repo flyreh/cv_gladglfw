@@ -14,7 +14,7 @@ void Camera::UpdateCameraInput(float deltaTime /*Camera& camera1, Camera& camera
 	  std::cout << "Cambio a camara 1"  << std::endl;
     activeCamera = &camera1;  // Cambiar a la primera cámara
   }
-  if (Input::KeyDown(GLFW_KEY_2)) {
+  else if (Input::KeyDown(GLFW_KEY_2)) {
 
 
     std::cout << "Cambio a camara 2" << std::endl;

@@ -109,5 +109,30 @@ namespace Util {
       return result;
     }
 
-  
+
+	inline void SetNormalAndTangentFromVertices(Vertex*ver1, Vertex* ver2, Vertex* ver3) {
+        glm::vec3& v1 = ver1->position;
+        glm::vec3& v2 = ver2->position;
+        glm::vec3& v3 = ver3->position;
+        glm::vec2& uv1 = ver1->uv;
+        glm::vec2& uv2 = ver2->uv;
+        glm::vec2& uv3 = ver3->uv;
+        // Edges of the triangle : position delta. UV delta
+        glm::vec3 deltaPos1 = v2 - v1;
+        glm::vec3 deltaPos2 = v3 - v1;
+        glm::vec2 deltaUV1 = uv2 - uv1;
+        glm::vec2 deltaUV2 = uv3 - uv1;
+        float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+        glm::vec3 tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r;
+        glm::vec3 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x) * r;
+        glm::vec3 normal = glm::normalize(glm::cross(deltaPos1, deltaPos2));
+        ver1->tangent = tangent;
+        ver2->tangent = tangent;
+        ver3->tangent = tangent;
+
+		ver1->bitangent = bitangent;
+		ver2->bitangent = bitangent;
+		ver3->bitangent = bitangent;
+	}
+
 }

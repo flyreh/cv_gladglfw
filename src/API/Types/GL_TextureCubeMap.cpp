@@ -31,13 +31,13 @@ void OpenGLCubemapTexture::Load (std::string name, std::string filetype) {
                      &m_textureData[i].m_numChannels, STBI_rgb_alpha);
     }
 
-    for (int i = 0; i < 6; i++) {
+   /* for (int i = 0; i < 6; i++) {
       if (m_textureData[i].m_data != nullptr) {
         std::cout << "Loaded Texture CubeMap: " << filepaths[i] << std::endl;
       } else {
         std::cout << "Failed to load Texture: " << filepaths[i] << std::endl;
       }
-    }
+    }*/
 
     std::cout << "ID : CubeMap loaded and baked " << ID << std::endl;
 
@@ -60,8 +60,6 @@ void OpenGLCubemapTexture::Load (std::string name, std::string filetype) {
       }
     }
     
-
-
 }
 
 

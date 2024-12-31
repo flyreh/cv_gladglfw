@@ -164,10 +164,10 @@ bool OpenGLTexture::Load(const std::string filepath, bool compressed) {
 
 TextureData LoadTextureData(std::string filepath) {
 
-  stbi_set_flip_vertically_on_load(false);
+  stbi_set_flip_vertically_on_load(true);
   TextureData textureData;
   textureData.m_data = stbi_load(filepath.data(), &textureData.m_width, &textureData.m_height,
-                                 &textureData.m_numChannels, STBI_rgb_alpha);
+                                 &textureData.m_numChannels, 0);
 
   if (textureData.m_data == nullptr) {
     std::cerr << "Error al cargar la textura: " << filepath << std::endl;
@@ -203,16 +203,18 @@ bool OpenGLTexture::Bake() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    GLenum format = (_NumOfChannels == 4) ? GL_RGBA : GL_RGB;
     
     if (_NumOfChannels == 1) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, _width, _height, 0, GL_RED, GL_UNSIGNED_BYTE, m_data);
     }
     else {
+        
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, format, GL_UNSIGNED_BYTE, m_data);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_data);
     }
     
-
     glGenerateMipmap(GL_TEXTURE_2D);
 
      if (m_data == nullptr) {

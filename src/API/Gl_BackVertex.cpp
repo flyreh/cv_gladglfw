@@ -34,6 +34,10 @@ namespace GLBackVertex {
     GLuint g_cubeMapVBO = 0;
     GLuint g_cubeMapEBO = 0;
 
+    GLuint g_cubeLightVAO = 0;
+	GLuint g_cubeLightVBO = 0;
+
+
 
     GLuint GetVertexDataVAO() {
         return _vertexDataVAO;
@@ -86,6 +90,13 @@ namespace GLBackVertex {
     GLuint GetCSGEBO() {
         return g_constructiveSolidGeometryEBO;
     }
+	GLuint GetCubeLightVAO() {
+		return g_cubeLightVAO;
+	}
+
+	GLuint GetCubeLightVBO() {
+		return g_cubeLightVBO;
+	}
 
 	GLuint GetCubeVAO() {
 		return g_cubeVAO;
@@ -110,42 +121,56 @@ namespace GLBackVertex {
 
 }
 
-void GLBackVertex::UploadCubeVertexData(std::vector<float> vertices) {
+void GLBackVertex::UploadCubeVertexData(std::vector<Vertex>& vertices) {
+    static int allocatedBufferSize = 0;
+    if (g_cubeVAO == 0) {
+        glGenVertexArrays(1, &g_cubeVAO);
+        glGenBuffers(1, &g_cubeVBO);
+    }
+    if (vertices.empty()) {
+        return;
+    }
+    glBindVertexArray(g_cubeVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, g_cubeVBO);
 
-  static int allocatedBufferSize = 0;
-  if (g_cubeVAO == 0) {
-    glGenVertexArrays(1, &g_cubeVAO);
-    glGenBuffers(1, &g_cubeVBO);
-  }
-  if (vertices.empty()) {
-    return;
-  }
-  glBindVertexArray(g_cubeVAO);
-  glBindBuffer(GL_ARRAY_BUFFER, g_cubeVBO);
+    // Gestiona el tamaño del buffer, reutilizando memoria si es posible
+    if (vertices.size() * sizeof(Vertex) <= allocatedBufferSize) {
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
+    }
+    else {
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+        allocatedBufferSize = vertices.size() * sizeof(Vertex);
+    }
 
-  if (vertices.size() * sizeof(float) <= allocatedBufferSize) {
-    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(float), vertices.data());
-  } else {
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-    allocatedBufferSize = vertices.size() * sizeof(float);
-  }
+    // Configura los atributos de los vértices basados en la estructura Vertex
+    // Position
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 
-  // Configura los atributos de los vértices
-  // Posición de los vértices
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
+    // Texture coordinates (UV)
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
 
-  // Coordenadas de textura
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-  glEnableVertexAttribArray(1);
+    // Normals
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
-  // Coordenadas de los vectores Normales
-  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
-  glEnableVertexAttribArray(2);
+    // Tangents
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
 
-  glBindVertexArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
+    // Bitangents
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, bitangent));
 
+    // Desenlaza el VAO y el buffer
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+
+  // Desvincular el VAO
+  //glBindVertexArray(0);
 
     /*static int allocatedBufferSize = 0;
     if (g_cubeVAO == 0) {
@@ -172,6 +197,45 @@ void GLBackVertex::UploadCubeVertexData(std::vector<float> vertices) {
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     allocatedBufferSize = vertices.size() * sizeof(glm::vec2);*/
+
+}
+
+void GLBackVertex::UploadVertexLight(std::vector<Vertex> vertices) {
+    static int allocatedBufferSize = 0;
+    if (g_cubeLightVAO == 0) {
+        glGenVertexArrays(1, &g_cubeLightVAO);
+        glGenBuffers(1, &g_cubeLightVBO);
+    }
+    if (vertices.empty()) {
+        return;
+    }
+    glBindVertexArray(g_cubeLightVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, g_cubeLightVBO);
+
+    if (vertices.size() * sizeof(Vertex) <= allocatedBufferSize) {
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
+    }
+    else {
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+        allocatedBufferSize = vertices.size() * sizeof(Vertex);
+    }
+
+    // Configura los atributos de los vértices
+    // Posición de los vértices
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+
+    // Texture coordinates (UV)
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+
+    // Normals
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 
 }
 

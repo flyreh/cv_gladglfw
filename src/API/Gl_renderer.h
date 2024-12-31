@@ -45,6 +45,12 @@ namespace OpenGLRenderer {
 
     void RenderFrame();
 
+	void ActivateCubeLightShader();
+
+	void ActivateCubeLightVAO();
+
+	void DeleteCubeLightVAO();
+
     void ActivateCubeMirrorShader();
    
 	void ActivateCubeDefectShader();
